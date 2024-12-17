@@ -1,28 +1,33 @@
 pipeline {
     agent any
-    
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials') // Add DockerHub credentials in Jenkins
+        DOCKER_IMAGE = "cjas9/python-app"
+    }
+
     stages {
-        stage('Check-out from GitHub') {
+        stage('Jasleen - Build Docker Image') {
             steps {
-                echo 'Checking out code from GitHub'
+                script {
+                    bat 'docker build -t %DOCKER_IMAGE% .'
+                }
             }
         }
-        
-        stage('Build') {
+
+        stage('Jasleen - Login to Dockerhub') {
             steps {
-                echo 'Building the project...'
+                script {
+                    bat 'echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin'
+                }
             }
         }
-        
-        stage('Test') {
+
+        stage('Jasleen - Push image to Dockerhub') {
             steps {
-                echo 'Running tests...'
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the project...'
+                script {
+                    bat 'docker push %DOCKER_IMAGE%'
+                }
             }
         }
     }
