@@ -10,7 +10,7 @@ pipeline {
         stage('Jasleen - Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t %DOCKER_IMAGE% .'
+                    sh 'docker build -t $DOCKER_IMAGE .'
                 }
             }
         }
@@ -18,7 +18,7 @@ pipeline {
         stage('Jasleen - Login to Dockerhub') {
             steps {
                 script {
-                    sh 'echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin'
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                 }
             }
         }
@@ -26,7 +26,7 @@ pipeline {
         stage('Jasleen - Push image to Dockerhub') {
             steps {
                 script {
-                    sh 'docker push %DOCKER_IMAGE%'
+                    sh 'docker push $DOCKER_IMAGE'
                 }
             }
         }
